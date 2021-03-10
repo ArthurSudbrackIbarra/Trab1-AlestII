@@ -20,139 +20,105 @@ public class Main {
 		try (BufferedReader reader = Files.newBufferedReader(diretorio, Charset.defaultCharset())) {
 					
 			String linha = null;
-			int numeroLinhas = 0;
 		
 			//Continuar lendo o arquivo enquanto ainda houver linhas.
 			while ((linha = reader.readLine()) != null) {
 
-				//Dividindo a linha pelos espacos em branco. Dessa forma,
-				//cada posicao de "partes" ira conter o nome de um computador ou o tamanho/valor de uma tarefa realizada.
+				//Dividindo a linha lida pelos espacos em branco. Dessa forma, cada posicao de "partes" (0, 1 e 2) ira
+				//conter o nome de um computador ou o valor de uma tarefa realizada.
+
 				String[] partes = linha.split(" ");
 				
-				//Se estivermos lendo a primeira linha do arquivo, entao sera feito um setup inical.
-				if(numeroLinhas == 0) {
+				//Pegamos o nome do primeiro computador lido na linha e tentamos achar sua referencia
+				//em nosso HashMap dentro da classe Rede.
+				Computador pai = rede.obterComputador(partes[0]);
+				
+				//Caso o computador nao seja encontrado, sabemos que estamos lendo a primeira linha do arquivo, e, portanto,
+				//precisamos criar nosso primeiro objeto computador, o qual sera pai de todos os demais computadores da rede.
+				//O computador criado recebe como parametro de nome partes[0], pois o seu nome sera aquele definido no arquivo 
+				//que estamos lendo. Como parametro de valor, este computador recebera null, pois o primeiro computador lido jamais
+				//comecara com um valor numerico.
+
+				//Caso o computador seja encontrado, ja teremos acesso a sua referencia, a qual sera devolvida pelo metodo
+				//da classe Rede "obterComputador".
+
+				if(pai == null){
+					pai = new Computador(partes[0], null);
+					rede.adicionarComputador(partes[0], pai);
+				}
+				
+				//Os demais componentes na linha serao filhos do pai acima.
+
+				Computador filho1 = null;
+				Computador filho2 = null;
+				
+				//Caso o segundo componente da linha represente um numero,
+				//entao sabemos que a tarefa foi realizada.
+				if(isNumeric(partes[1])) {					
 					
-					//O primeiro computador lido sera o computador central, analogo ao "root" das arvores.
-					//Este computador podera se dividir em mais filhos, os quais podem ou se dividir em mais
-					//computadores, ou realizar a tarefa proposta.
-					Computador computador1 = new Computador(partes[0], null);
+					//Estamos definindo o nome destes computadores que realizaram a atividade
+					//como "Folha X de Y", sendo que X representa a direcao (esquerda [E] ou direita [D])
+					//e Y representa o nome do pai desta folha (X0, por exemplo).
+
+					String nome1 = "Folha E de " + partes[0];
+					String nome2 = "Folha D de " + partes[0];
 					
-					rede.definirComputadorCentral(computador1);
+					//O valor que estes computadores que realizaram a tarefa receberao sera o valor
+					//informado nas linhas do arquivo, apos essa informacao ser convertida para Double.
+
+					Double valor1 = Double.parseDouble(partes[1]);
+					Double valor2 = Double.parseDouble(partes[2]);
 					
-					//Os demais computadores da linha serao filhos diretos do computador central.
-					Computador computador2 = null;
-					Computador computador3 = null;
-					
-					//Caso o segundo componente da linha representar um numero,
-					//entao sabemos que a tarefa foi realizada.
-					if(isNumeric(partes[1])) {					
-						
-						//Os nomes dos computadores precisam ser unicos, entao 
-						//estamos definindo o nome destes computadores que realizaram a atividade
-						//como "Leaf X", sendo que X representa um numero qualquer que sempre sera incrementado.
-						String nome1 = "Leaf " + numeroLinhas;
-						String nome2 = "Leaf " + (numeroLinhas + 1);
-						
-						//O valor que estes computadores que realizaram a tarefa receberao 
-						//sera o valor informado nas linhas do arquivo, apos essa informacao ser convertida para Double.
-						Double valor1 = Double.parseDouble(partes[1]);
-						Double valor2 = Double.parseDouble(partes[2]);
-						
-						computador2 = new Computador(nome1, valor1);
-						computador3 = new Computador(nome2, valor2);
-						
-					} else {
-						
-						//Caso o segundo componente da linha nao represente um numero,
-						//entao sabemos que a tarefa ainda nao foi realizada e se dividiu em mais computadores.
-						
-						//Sendo assim, os nomes dos novos computadores podem ser os proprios nomes definidos
-						//no arquivo (X1, por exemplo), e estes computadores nao terao nenhum valor.
-						
-						computador2 = new Computador(partes[1], null);
-						computador3 = new Computador(partes[2], null);
-					}								
-					
-					//O primeiro computador terá como filhos os computadores 2 e 3.
-					computador1.setFilhoE(computador2);
-					computador1.setFilhoD(computador3);
-					
-					//Os computadores 2 e 3 terao como pai o computador 1.
-					computador2.setPai(computador1);
-					computador3.setPai(computador1);
-					
-					//Adicionando os computadores criados em nossa rede de computadores.
-					rede.adicionarComputador(computador1.getNome(), computador1);
-					rede.adicionarComputador(computador2.getNome(), computador2);
-					rede.adicionarComputador(computador3.getNome(), computador3);
+					filho1 = new Computador(nome1, valor1);
+					filho2 = new Computador(nome2, valor2);
 					
 				} else {
 					
-					//Se nao estivermos lendo a primeira linha, este trecho sera executado.
-					//Note que muitos passos realizados aqui se assemelham aos passos feitos 
-					//quando estavamos lendo a primeira linha do arquivo, no entanto, ha algumas 
-					//mudancas importantes.
+					//Caso o segundo componente da linha nao represente um numero,
+					//entao sabemos que a tarefa ainda nao foi realizada e se dividiu em mais computadores.
 					
-					//Pegamos o primeiro computador informado na linha pelo seu nome. Ele agora sera um pai.
-					Computador pai = rede.obterComputador(partes[0]);
-					
-					//Os demais computadores na linha serao filhos do pai acima.
-					Computador filho1 = null;
-					Computador filho2 = null;
-					
-					//Caso o segundo componente da linha representar um numero,
-					//entao sabemos que a tarefa foi realizada.
-					if(isNumeric(partes[1])) {					
-						
-						//Os nomes dos computadores precisam ser unicos, entao 
-						//estamos definindo o nome destes computadores que realizaram a atividade
-						//como "Leaf X", sendo que X representa um numero qualquer que sempre sera incrementado.
-						String nome1 = "Leaf " + numeroLinhas;
-						String nome2 = "Leaf " + (numeroLinhas + 1);
-						
-						//O valor que estes computadores que realizaram a tarefa receberao 
-						//sera o valor informado nas linhas do arquivo, apos essa informacao ser convertida para Double.
-						Double valor1 = Double.parseDouble(partes[1]);
-						Double valor2 = Double.parseDouble(partes[2]);
-						
-						filho1 = new Computador(nome1, valor1);
-						filho2 = new Computador(nome2, valor2);
-						
-					} else {
-						
-						//Caso o segundo componente da linha nao represente um numero,
-						//entao sabemos que a tarefa ainda nao foi realizada e se dividiu em mais computadores.
-						
-						//Sendo assim, os nomes dos novos computadores podem ser os proprios nomes definidos
-						//no arquivo (X1, por exemplo), e estes computadores nao terao nenhum valor.
-						
-						filho1 = new Computador(partes[1], null);
-						filho2 = new Computador(partes[2], null);
-					}
-					
-					pai.setFilhoE(filho1);
-					pai.setFilhoD(filho2);
-					
-					filho1.setPai(pai);
-					filho2.setPai(pai);
-					
-					//Adicionando os novos computadores filhos a nossa rede de computadores.
-					rede.adicionarComputador(filho1.getNome(), filho1);
-					rede.adicionarComputador(filho2.getNome(), filho2);
-					
+					//Sendo assim, os nomes dos novos computadores podem ser os proprios nomes definidos
+					//no arquivo (X1, por exemplo), e estes computadores nao terao nenhum valor, assim como o computador inicial.
+				
+					filho1 = new Computador(partes[1], null);
+					filho2 = new Computador(partes[2], null);
 				}
 				
-				numeroLinhas++;
+				//Aqui definimos as relacoes que cada computador possui um com o outro,
+				//como se eles fossem nodos de uma arvore.
+
+				pai.setFilhoE(filho1);
+				pai.setFilhoD(filho2);
+				
+				filho1.setPai(pai);
+				filho2.setPai(pai);
+				
+				//Iremos adicionar os novos computadores filhos em nossa rede de computadores (HashMap)
+				//somente se eles nao forem computadores folhas, ou seja, somente se eles nao possuirem
+				//filhos e tiverem um valor (realizaram a atividade). Isto porque nao e de nosso interesse
+				//posteriormente calcular se estes computadores folhas estao equilibrados, dado que nao possuem filhos.
+
+				if(!filho1.getNome().startsWith("Folha")) {
+
+					rede.adicionarComputador(partes[1], filho1);
+					rede.adicionarComputador(partes[2], filho2);
+
+				}
 				
 			}
 			
-			System.out.print(rede);
+			//Apois sairmos do laco de repeticao que le o arquivo, ja podemos resolver o problema proposto.
+			//O metodo "resolverProblema" da classe Rede nos informara quais e quantos computadores estao equilibrados.
+			String[] informacoes = rede.resolverProblema();
+
+			//Agora podemos printar na tela as informacoes que recebemos do metodo.
+			System.out.print("Computadores equilibrados: \n\n" + informacoes[0] + "\n");
+			System.out.print("Quantidade de computadores equilibrados: " + informacoes[1]);
 			
 		} catch (IOException e) {
-			System.out.println("Houve algum erro em relacao a leitura do arquivo! Talvez o arquivo nao tenha sido encontrado.");
-			
+			System.out.println("Houve algum erro em relacao a leitura do arquivo! Talvez o arquivo nao tenha sido encontrado.");		
 		} catch (Exception e){
-			System.out.println("Houve algum erro inesperado:\n\n." + e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}

@@ -5,7 +5,7 @@ public class Computador {
 	A classe Computador seria semelhante a um nodo (Node) de uma arvore.
 	 
 	Todos os computadores tem um nome unico e podem ter um valor,
-	além de possuirem referencias para seus computadores pais e filhos.
+	alem de possuirem referencias para seus computadores pais e filhos.
 	====================================================================
 	*/
 	
