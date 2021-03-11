@@ -13,7 +13,7 @@ public class Main {
 		Rede rede = new Rede();
 		
 		//Diretorio do arquivo com as entradas.
-		String nomeDiretorio = "entrada.txt";
+		String nomeDiretorio = "teste5.txt";
 		Path diretorio = Paths.get(nomeDiretorio);
 
 		//Ler e interpretar o arquivo com as entradas.
