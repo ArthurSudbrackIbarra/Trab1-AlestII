@@ -28,16 +28,22 @@ public class Main {
 				//conter o nome de um computador ou o valor de uma tarefa realizada.
 
 				String[] partes = linha.split(" ");
+
+				//Nao fazer nada se a linha nao possuir pelo menos 3 componentes.			
+				if(partes.length < 3){
+					continue;
+				}
 				
 				//Pegamos o nome do primeiro computador lido na linha e tentamos achar sua referencia
 				//em nosso HashMap dentro da classe Rede.
+
 				Computador pai = rede.obterComputador(partes[0]);
 				
 				//Caso o computador nao seja encontrado, sabemos que estamos lendo a primeira linha do arquivo, e, portanto,
 				//precisamos criar nosso primeiro objeto computador, o qual sera pai de todos os demais computadores da rede.
 				//O computador criado recebe como parametro de nome partes[0], pois o seu nome sera aquele definido no arquivo 
-				//que estamos lendo. Como parametro de valor, este computador recebera null, pois o primeiro computador lido jamais
-				//comecara com um valor numerico.
+				//que estamos lendo. Como parametro de valor, este computador recebera null, pois o primeiro computador lido
+				//jamais comecara com um valor numerico.
 
 				//Caso o computador seja encontrado, ja teremos acesso a sua referencia, a qual sera devolvida pelo metodo
 				//da classe Rede "obterComputador".
@@ -54,23 +60,19 @@ public class Main {
 				
 				//Caso o segundo componente da linha represente um numero,
 				//entao sabemos que a tarefa foi realizada.
-				if(isNumeric(partes[1])) {					
+				if(numerico(partes[1])) {					
 					
-					//Estamos definindo o nome destes computadores que realizaram a atividade
-					//como "Folha X de Y", sendo que X representa a direcao (esquerda [E] ou direita [D])
-					//e Y representa o nome do pai desta folha (X0, por exemplo).
+					//Note que estes computadores serao os unicos que nao terao um nome unico, por isto
+					//estamos passando null como primeiro parametro no momento em que instanciamos estes computadores.
 
-					String nome1 = "Folha E de " + partes[0];
-					String nome2 = "Folha D de " + partes[0];
-					
 					//O valor que estes computadores que realizaram a tarefa receberao sera o valor
 					//informado nas linhas do arquivo, apos essa informacao ser convertida para Double.
 
 					Double valor1 = Double.parseDouble(partes[1]);
 					Double valor2 = Double.parseDouble(partes[2]);
 					
-					filho1 = new Computador(nome1, valor1);
-					filho2 = new Computador(nome2, valor2);
+					filho1 = new Computador(null, valor1);
+					filho2 = new Computador(null, valor2);
 					
 				} else {
 					
@@ -98,7 +100,7 @@ public class Main {
 				//filhos e tiverem um valor (realizaram a atividade). Isto porque nao e de nosso interesse
 				//posteriormente calcular se estes computadores folhas estao equilibrados, dado que nao possuem filhos.
 
-				if(!filho1.getNome().startsWith("Folha")) {
+				if(filho1.getNome() != null) {
 
 					rede.adicionarComputador(partes[1], filho1);
 					rede.adicionarComputador(partes[2], filho2);
@@ -109,21 +111,31 @@ public class Main {
 			
 			//Apois sairmos do laco de repeticao que le o arquivo, ja podemos resolver o problema proposto.
 			//O metodo "resolverProblema" da classe Rede nos informara quais e quantos computadores estao equilibrados.
-			String[] informacoes = rede.resolverProblema();
+			String resultado = rede.resolverProblema();
 
 			//Agora podemos printar na tela as informacoes que recebemos do metodo.
-			System.out.print("Computadores equilibrados: \n\n" + informacoes[0] + "\n");
-			System.out.print("Quantidade de computadores equilibrados: " + informacoes[1]);
+			System.out.print(resultado);
 			
-		} catch (IOException e) {
-			System.out.println("Houve algum erro em relacao a leitura do arquivo! Talvez o arquivo nao tenha sido encontrado.");		
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException erro){
+
+			//Caso o arquivo nao seja encontrado, esta mensagem sera exibida.
+			System.out.print("Houve algum erro durante a leitura do arquivo.\n" +
+			"Certifique-se de que este exista e que se localiza no mesmo diretorio do executavel.");
+
+		} catch (Exception erro){
+
+			//Caso ocorra algum erro de execucao nao relacionada a leitura do arquivo em si,
+			//sabemos que ha algum erro de formatacao no arquivo que nao esta de acordo com o padrao
+			//estabelecido para as entradas de teste.		
+			System.out.print("Houve algum de formatacao do arquivo. Certifique-se de que o conteudo do arquivo\n" + 
+			"esta de acordo com os padroes estabelecidos de entrada.");
+
 		}
 		
 	}
 	
-	public static boolean isNumeric(String str) {
+	//Este metodo estatico e responsavel por nos informar se uma String e somente numerica ou nao.
+	public static boolean numerico(String str) {
 		if (str == null) {
 	        return false;
 	    }

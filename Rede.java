@@ -38,55 +38,65 @@ public class Rede {
 	//subarvore. Note que e interessante que este variavel seja estatica, uma vez
 	//que ela e incrementada dentro de metodos recursivos, e, desta forma, sempre temos
 	//como modifica-la independentemente do escopo em que nos localizamos.
-	private static double somaFolhas = 0;
+	private static double somaFolhas;
 
 	//Metodo responsavel por indicar a soma dos valores de todas as folhas de uma
 	//arvore ou subarvore. Este metodo nao retorna valor algum, no entanto, modifica diretamente
-	//o valor da variavel "somaFolhas" acima, a qual pode ser usada posteriormente.
+	//o valor da variavel "somaFolhas" acima, a qual sera usada posteriormente.
 	private void somaDasFolhas(Computador computador){
 
-		//A recursao e finalizada quando um computador nao possuir mais filhos (divisoes).
-		if(computador.getFilhoE() == null){
+		//Se o computador for uma folha, ou seja, possuir um valor, entao iremos somar
+		//o seu valor a nossa variavel estatica "somaFolhas" e acabar a chamada do metodo.
+		if(computador.getValor() != null){
+			somaFolhas += computador.getValor();
 			return;
 		}
 
-		//Neste problema, para que um computador seja uma folha, ele deve possuir algum valor diferente de nulo.
-		//Se o computador atual possuir filhos folhas, entao incrementamos a variavel "somaFolhas" com os valores
-		//armazenados em seus filhos esquerdo e direito.
-		if(computador.getFilhoE().getValor() != null) {
-			somaFolhas += computador.getFilhoE().getValor() + computador.getFilhoD().getValor();
-		}
-
-		//Aqui chamamos a recursao novamente passando os filhos esquerdo e direito do computador pai.
+		//Enquanto o computador que estamos analisando nao for uma folha, chamaremos este metodo
+		//recursivamente mais duas vezes, passando como parametro os filhos esquerdo e direito do computador pai.
 		this.somaDasFolhas(computador.getFilhoE());
 		this.somaDasFolhas(computador.getFilhoD());
 
 	}
 
-	public String[] resolverProblema(){
+	//Metodo responsavel por nos dizer com precisao quais e quantos computadores estao equilibrados.
+	public String resolverProblema(){
 
-		String nomesEquilibrados = "";
+		//String a qual guardara o nome dos computadores que estao equilibrados.
+		String equilibrados = "";
+
+		//Contador para marcarmos quantos computadores estao equilibrados.
 		int quantosEquilibrados = 0;
 
+		//Aqui estamos percorrendo linearmente todos os computadores nao-folhas,
+		//os quais estao guardados em nosso HashMap de computadores.
 		for(Computador computador : this.computadores.values()){
 
-			this.somaDasFolhas(computador);
+			//Chamamos o metodo "somaDasFolhas" para a a subarvore da esquerda
+			//do computador que estamos retirando de nosso HashMap.	
+			this.somaDasFolhas(computador.getFilhoE());
+			double somaFolhasE = somaFolhas;
+			somaFolhas = 0;
 
-			if(somaFolhas % 2 != 1){
-				nomesEquilibrados += computador.getNome() + "\n";
+			//Chamamos o metodo "somaDasFolhas" para a a subarvore da direita
+			//do computador que estamos retirando de nosso HashMap.	
+			this.somaDasFolhas(computador.getFilhoD());
+			double somaFolhasD = somaFolhas;
+			somaFolhas = 0;
+
+			//Se a soma dos valores das folhas das subarvores esquerdas e direitas do
+			//computador forem iguais, entao o computador em questao esta equilibrado.
+			if(somaFolhasE == somaFolhasD){
+				equilibrados += computador.getNome() + "\n";
 				quantosEquilibrados++;
 			}
 
-			somaFolhas = 0;
-
 		}
 
-		String[] informacoes = new String[2];
-		
-		informacoes[0] = nomesEquilibrados;
-		informacoes[1] = Integer.toString(quantosEquilibrados);
+		//Montando o resultado com as informacoes obtidas (nomes e quantidades dos computadores equilibrados).
+		String resultado = "[Computadores Equilibrados]\n\n" + equilibrados + "\n\n[Quantidade de Computadores Equilibrados]\n\n" + quantosEquilibrados;
 
-		return informacoes;
+		return resultado;
 
 	}
 
