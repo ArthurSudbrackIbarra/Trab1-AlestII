@@ -5,6 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Arthur Sudbrack Ibarra, Willian Albeche
+ */
 public class Main {
 
 	public static void main(String[] args) {

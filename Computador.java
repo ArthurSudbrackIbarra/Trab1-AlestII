@@ -1,3 +1,6 @@
+/**
+ * @author Arthur Sudbrack Ibarra, Willian Albeche
+ */
 public class Computador {
 
 	/* EXPLICACAO DA CLASSE

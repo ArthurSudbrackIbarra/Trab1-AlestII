@@ -1,5 +1,8 @@
 import java.util.HashMap;
 
+/**
+ * @author Arthur Sudbrack Ibarra, Willian Albeche
+ */
 public class Rede {
 	
 	/* EXPLICANDO A CLASSE
