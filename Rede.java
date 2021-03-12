@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 /**
- * @author Arthur Sudbrack Ibarra, Willian Albeche
+ * @author Arthur Sudbrack Ibarra, Willian Magnum Albeche
  */
 public class Rede {
 	

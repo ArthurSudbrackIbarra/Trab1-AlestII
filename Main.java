@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * @author Arthur Sudbrack Ibarra, Willian Albeche
+ * @author Arthur Sudbrack Ibarra, Willian Magnum Albeche
  */
 public class Main {
 
