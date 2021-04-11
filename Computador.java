@@ -1,5 +1,5 @@
 /**
- * @author Arthur Sudbrack Ibarra, Willian Magnum Albeche
+ * @author Arthur Sudbrack Ibarra, Luiza Lencina, Willian Magnum Albeche
  */
 public class Computador {
 

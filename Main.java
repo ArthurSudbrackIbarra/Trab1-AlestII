@@ -6,11 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * @author Arthur Sudbrack Ibarra, Willian Magnum Albeche
+ * @author Arthur Sudbrack Ibarra, Luiza Lencina, Willian Magnum Albeche
  */
 public class Main {
 
 	public static void main(String[] args) {
+		
+		//Tempo inicial de execucao do algoritmo.
+		long tempoInicial = System.currentTimeMillis();
 		
 		//Objeto Rede, o qual tera acesso a todos os computadores.
 		Rede rede = new Rede();
@@ -116,8 +119,14 @@ public class Main {
 			//O metodo "resolverProblema" da classe Rede nos informara quais e quantos computadores estao equilibrados.
 			String resultado = rede.resolverProblema();
 
+			//Tempo final de execucao do algoritmo.
+			long tempoFinal = System.currentTimeMillis();
+
 			//Agora podemos printar na tela as informacoes que recebemos do metodo.
 			System.out.print(resultado);
+
+			//Tambem printamos na tela o tempo total necessario para a execucao do algoritmo.
+			System.out.print("\n\n[Tempo de execucao necessario] \n\n" + (tempoFinal - tempoInicial) + " milissegundos");
 			
 		} catch (IOException erro){
 
