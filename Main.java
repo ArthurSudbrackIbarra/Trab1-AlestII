@@ -130,7 +130,9 @@ public class Main {
 				System.out.print(resultado);
 
 				//Tambem printamos na tela o tempo total necessario para a execucao do algoritmo.
-				System.out.print("\n\n[Tempo de execucao necessario] \n\n" + (tempoFinal - tempoInicial) + " milissegundos");
+				System.out.print("\n\n[Tempo de execucao necessario]\n\n" + (tempoFinal - tempoInicial) + " milissegundos");
+
+				System.out.print("\n\n[Quantidade de computadores pais]\n\n" + rede.quantidadeDePais());
 
 				tempoTotal += (tempoFinal - tempoInicial);
 				

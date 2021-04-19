@@ -103,6 +103,11 @@ public class Rede {
 
 	}
 
+	//Retorna a quantidade de computadores pais presentes na rede de computadores.
+	public int quantidadeDePais(){
+		return this.computadores.size();
+	}
+
 	//Metodo toString da classe Rede.
 	public String toString() {
 		
